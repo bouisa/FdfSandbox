@@ -5,6 +5,8 @@
 package fxdataexamples;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
@@ -13,11 +15,21 @@ import javafx.beans.property.StringProperty;
  */
 public class Vector {
     
-    private StringProperty id;
+    private StringProperty id = new SimpleStringProperty();
     
-    private DoubleProperty velocity;
+    private DoubleProperty velocity = new SimpleDoubleProperty();
 
+    public final String getId() {
+        return id.get();
+    }
     
+    public final void setId(String value) {
+        id.set(value);
+    }
+    
+    public StringProperty idProperty() {
+        return id;
+    }
     
     
 }
