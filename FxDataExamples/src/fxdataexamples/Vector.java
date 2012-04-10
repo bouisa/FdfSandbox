@@ -17,7 +17,7 @@ public class Vector {
     
     private StringProperty id = new SimpleStringProperty();
     
-    private DoubleProperty velocity = new SimpleDoubleProperty();
+    private Double velocity;
 
     public final String getId() {
         return id.get();
@@ -30,6 +30,13 @@ public class Vector {
     public StringProperty idProperty() {
         return id;
     }
-    
-    
+
+    public Double getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(Double velocity) {
+        this.velocity = velocity;
+    }
+
 }
