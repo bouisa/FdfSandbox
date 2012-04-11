@@ -4,27 +4,26 @@
  */
 package fxdataexamples;
 
+import com.dooapp.fxform.FXForm;
 import fxdataexamples.persistence.Customer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
 
 /**
  *
@@ -46,6 +45,9 @@ public class TestTable implements Initializable {
     
     @FXML
     private TextField textfield;
+    
+    @FXML
+    private ScrollPane formPane;
     
     @FXML
     private void handleTableDrag(MouseEvent event) {
@@ -138,6 +140,11 @@ public class TestTable implements Initializable {
         customerTable.getColumns().addAll(nameCol);
         
         textfield.textProperty().bindBidirectional(firstCustomer.nameProperty());
+        
+        
+        FXForm fxForm = new FXForm(firstCustomer);
+        formPane.setContent(fxForm);
+        
     }
         
 }

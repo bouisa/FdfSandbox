@@ -17,5 +17,6 @@
       </children>
     </HBox>
     <TableView id="tableView2" fx:id="customerTable" prefHeight="200.0" prefWidth="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+    <ScrollPane id="scrollPane1" fx:id="formPane" layoutY="221.0" prefHeight="179.0" prefWidth="600.0" />
   </children>
 </AnchorPane>
