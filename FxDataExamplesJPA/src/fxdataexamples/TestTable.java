@@ -5,9 +5,19 @@
 package fxdataexamples;
 
 import com.dooapp.fxform.FXForm;
+import com.dooapp.fxform.model.ElementController;
+import com.dooapp.fxform.reflection.Util;
+import com.dooapp.fxform.view.NodeCreationException;
+import com.dooapp.fxform.view.factory.DelegateFactory;
+import com.dooapp.fxform.view.factory.DisposableNode;
+import com.dooapp.fxform.view.factory.DisposableNodeWrapper;
+import com.dooapp.fxform.view.factory.NodeFactory;
+import com.dooapp.fxform.view.handler.FieldHandler;
 import fxdataexamples.persistence.Customer;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -16,12 +26,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Callback;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -141,10 +149,34 @@ public class TestTable implements Initializable {
         
         textfield.textProperty().bindBidirectional(firstCustomer.nameProperty());
         
-        
+        DelegateFactory.addGlobalFactory(new DateHandler(), DATE_FACTORY);
         FXForm fxForm = new FXForm(firstCustomer);
         formPane.setContent(fxForm);
         
     }
+    
+    private static class DateHandler implements FieldHandler {
         
+        @Override
+        public boolean handle(Field field) {
+            try {
+                return Util.getObjectPropertyGeneric(field).isAssignableFrom(Date.class);
+            } catch (Exception e) {
+            }
+            return false;
+        }
+    }
+    
+    private final static NodeFactory DATE_FACTORY = new NodeFactory() {
+
+        public DisposableNode createNode(ElementController elementController) throws NodeCreationException {
+            return new DisposableNodeWrapper(new Label(elementController.getElement().getField().getType() + " wow this worked"),
+                    new Callback<Node, Void>() {
+                        public Void call(Node node) {
+                            return null;
+                        }
+                    });
+        }
+    };
+
 }

@@ -5,10 +5,8 @@
 package fxdataexamples;
 
 import fxdataexamples.persistence.Customer;
-import javafx.beans.InvalidationListener;
+import java.util.Date;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import org.hibernate.validator.constraints.Email;
 
 /**
@@ -21,7 +19,7 @@ public class CustomerFxBean extends Customer {
     private StringProperty name;
     private StringProperty email;
     private IntegerProperty creditLimit;
-    private ObjectProperty<String> random;
+    private ObjectProperty<Date> random;
     
     public CustomerFxBean(Customer c) {
         this.customer = c;
@@ -29,7 +27,7 @@ public class CustomerFxBean extends Customer {
         email = new SimpleStringProperty(c.getEmail());
         creditLimit = new SimpleIntegerProperty(c.getCreditLimit());
         
-        random = new SimpleObjectProperty<>(c.getCity());
+        random = new SimpleObjectProperty<>(new Date());
     }
     
     public StringProperty nameProperty() {
@@ -51,6 +49,10 @@ public class CustomerFxBean extends Customer {
         this.name.set(name);
         customer.setName(name);
     }
+    
+    public StringProperty emailProperty() {
+        return email;
+    }
 
     @Email
     @Override
@@ -66,6 +68,10 @@ public class CustomerFxBean extends Customer {
         this.email.set(email);
         customer.setEmail(email);
     }
+    
+    public IntegerProperty creditLimitProperty() {
+        return creditLimit;
+    }
 
     @Override
     public Integer getCreditLimit() {
@@ -80,17 +86,21 @@ public class CustomerFxBean extends Customer {
         this.creditLimit.set(creditLimit);
         customer.setCreditLimit(creditLimit);
     }
+    
+    public ObjectProperty<Date> randomProperty() {
+        return random;
+    }
 
-    public String getRandom() {
-        if(!customer.getCity().equals(random.get())) {
-            setRandom(customer.getCity());
-        }
+    public Date getRandom() {
+//        if(!customer.getCity().equals(random.get())) {
+//            setRandom(customer.getCity());
+//        }
         return random.get();
     }
 
-    public void setRandom(String random) {
+    public void setRandom(Date random) {
         this.random.set(random);
-        customer.setCity(random);
+//        customer.setCity(random);
     }
     
     
