@@ -8,19 +8,18 @@
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="fxdataexamples.TestTable">
   <children>
-    <TableView id="tableView1" fx:id="table" editable="true" onDragDetected="#handleTableDrag" prefHeight="200.0" prefWidth="300.0" tableMenuButtonVisible="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-    <HBox id="HBox" alignment="CENTER" layoutX="14.0" layoutY="200.0" spacing="5.0">
+    <HBox id="HBox" alignment="CENTER" layoutX="14.0" layoutY="367.0" spacing="5.0">
       <children>
         <Button id="button1" onAction="#buttonclick" text="Button" />
         <TextField id="textField1" fx:id="textfield" onAction="#textfieldenter" prefWidth="200.0" promptText="prompt" />
         <Button id="button2" fx:id="bindButton" onAction="#bindPressed" text="BindButton" />
       </children>
     </HBox>
-    <TableView id="tableView2" fx:id="customerTable" prefHeight="200.0" prefWidth="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-    <ScrollPane id="scrollPane1" fx:id="formPane" layoutY="221.0" prefHeight="179.0" prefWidth="600.0">
-      <content>
-        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-      </content>
-    </ScrollPane>
+    <HBox id="HBox" alignment="CENTER" prefHeight="367.0" prefWidth="600.0" spacing="5.0" AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+        <TableView id="tableView2" fx:id="customerTable" prefHeight="200.0" prefWidth="300.0" HBox.hgrow="NEVER" />
+        <ScrollPane id="scrollPane1" fx:id="formPane" prefHeight="200.0" prefWidth="300.0" HBox.hgrow="ALWAYS" />
+      </children>
+    </HBox>
   </children>
 </AnchorPane>

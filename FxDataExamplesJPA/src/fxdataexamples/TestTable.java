@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,11 +29,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import jfxtras.labs.scene.control.CalendarTextField;
 
 /**
  *
@@ -45,8 +49,8 @@ public class TestTable implements Initializable {
     private List<CustomerFxBean> customerData;
     private CustomerFxBean firstCustomer;
     
-    @FXML
-    private TableView<Vector> table;
+//    @FXML
+//    private TableView<Vector> table;
     
     @FXML
     private TableView<CustomerFxBean> customerTable;
@@ -68,7 +72,7 @@ public class TestTable implements Initializable {
         v1.setVelocity(5.5);
         Vector v3 = new Vector();
         v3.setId("Tellah");
-        table.getItems().add(v3);
+//        table.getItems().add(v3);
     }
     
     @FXML
@@ -103,7 +107,7 @@ public class TestTable implements Initializable {
 
         ObservableList<Vector> vectors = FXCollections.observableArrayList(v1, v2);
 
-        table.setItems(vectors);
+//        table.setItems(vectors);
 
         TableColumn<Vector, String> idCol = new TableColumn<>("Id");
         idCol.setCellValueFactory(new PropertyValueFactory("id"));
@@ -112,7 +116,8 @@ public class TestTable implements Initializable {
         velocityCol.setCellValueFactory(new PropertyValueFactory("velocity"));
 //        velocityCol.setCellFactory(null);
 
-        table.getColumns().setAll(idCol, velocityCol);
+//        table.getColumns().setAll(idCol, velocityCol);
+        
 
 //        textfield.textProperty().bindBidirectional(v1.idProperty());
 //        DoubleProperty dp = new SimpleDoubleProperty(v1.getVelocity());
@@ -145,13 +150,32 @@ public class TestTable implements Initializable {
         TableColumn<CustomerFxBean, String> nameCol = new TableColumn<>("Name");
         nameCol.setCellValueFactory(new PropertyValueFactory("name"));
         
-        customerTable.getColumns().addAll(nameCol);
+        TableColumn<CustomerFxBean, Integer> creditLimitCol = new TableColumn<>("Credit Limit");
+        creditLimitCol.setCellValueFactory(new PropertyValueFactory("creditLimit"));
         
-        textfield.textProperty().bindBidirectional(firstCustomer.nameProperty());
-        
+        customerTable.getColumns().addAll(nameCol, creditLimitCol);
+       
         DelegateFactory.addGlobalFactory(new DateHandler(), DATE_FACTORY);
-        FXForm fxForm = new FXForm(firstCustomer);
-        formPane.setContent(fxForm);
+
+        customerTable.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<CustomerFxBean>() {
+
+                    @Override
+                    public void changed(ObservableValue<? extends CustomerFxBean> arg0, CustomerFxBean arg1, CustomerFxBean arg2) {
+                        FXForm fxForm = new FXForm(arg2);
+                        formPane.setContent(fxForm);
+
+                        if (arg1 != null) {
+                            textfield.textProperty().unbindBidirectional(arg1.nameProperty());
+                        }
+                        textfield.textProperty().bindBidirectional(arg2.nameProperty());
+                    }
+                });
+
+        
+
+        
+        
         
     }
     
@@ -170,7 +194,14 @@ public class TestTable implements Initializable {
     private final static NodeFactory DATE_FACTORY = new NodeFactory() {
 
         public DisposableNode createNode(ElementController elementController) throws NodeCreationException {
-            return new DisposableNodeWrapper(new Label(elementController.getElement().getField().getType() + " wow this worked"),
+//            return new DisposableNodeWrapper(new Label(elementController.getElement().getField().getType() + " wow this worked"),
+//                    new Callback<Node, Void>() {
+//                        public Void call(Node node) {
+//                            return null;
+//                        }
+//                    });
+            
+            return new DisposableNodeWrapper(new CalendarTextField(),
                     new Callback<Node, Void>() {
                         public Void call(Node node) {
                             return null;
