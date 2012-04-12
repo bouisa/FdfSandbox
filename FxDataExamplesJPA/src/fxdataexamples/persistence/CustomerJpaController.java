@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package fxdataexamples;
+package fxdataexamples.persistence;
 
-import fxdataexamples.exceptions.NonexistentEntityException;
-import fxdataexamples.exceptions.PreexistingEntityException;
+import fxdataexamples.persistence.exceptions.NonexistentEntityException;
+import fxdataexamples.persistence.exceptions.PreexistingEntityException;
 import fxdataexamples.persistence.Customer;
 import java.io.Serializable;
 import javax.persistence.Query;

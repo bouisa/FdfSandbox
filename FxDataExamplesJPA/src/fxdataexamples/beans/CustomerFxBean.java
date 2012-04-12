@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package fxdataexamples;
+package fxdataexamples.beans;
 
 import fxdataexamples.persistence.Customer;
 import java.util.Date;
@@ -22,20 +22,23 @@ public class CustomerFxBean extends Customer {
     private StringProperty name;
     private StringProperty email;
     private IntegerProperty creditLimit;
-    private ObjectProperty<Date> date;
+    private ObjectProperty<Date> date; // date has no underlying entity field, using it for date picker testing
     
     public CustomerFxBean(Customer c) {
         this.customer = c;
+        
+        customerId = new SimpleIntegerProperty(c.getCustomerId());
+        // For some reason it's important that the following setter corresponding to
+        // the entity's primary key is called, otherwise selection model change events
+        // won't fire (e.g. on TableView)
+        super.setCustomerId(c.getCustomerId());
         
         name = new SimpleStringProperty(c.getName());
         super.setName(c.getName());
         
         email = new SimpleStringProperty(c.getEmail());
         super.setEmail(c.getEmail());
-        
-        customerId = new SimpleIntegerProperty(c.getCustomerId());
-        super.setCustomerId(c.getCustomerId());
-        
+
         creditLimit = new SimpleIntegerProperty(c.getCreditLimit());
 
         addressline1 = new SimpleStringProperty(c.getAddressline1());
@@ -105,15 +108,11 @@ public class CustomerFxBean extends Customer {
     }
 
     public Date getDate() {
-//        if(!customer.getCity().equals(random.get())) {
-//            setRandom(customer.getCity());
-//        }
         return date.get();
     }
 
     public void setDate(Date random) {
         this.date.set(random);
-//        customer.setCity(random);
     }
     
     public IntegerProperty customerIdProperty() {

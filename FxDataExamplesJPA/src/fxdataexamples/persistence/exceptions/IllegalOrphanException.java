@@ -1,4 +1,4 @@
-package fxdataexamples.exceptions;
+package fxdataexamples.persistence.exceptions;
 
 import java.util.ArrayList;
 import java.util.List;
