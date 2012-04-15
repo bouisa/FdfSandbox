@@ -7,7 +7,6 @@ package fxdataexamples.beans;
 import fxdataexamples.persistence.Customer;
 import java.util.Date;
 import javafx.beans.property.*;
-import javax.persistence.Entity;
 import org.hibernate.validator.constraints.Email;
 
 /**
@@ -49,10 +48,29 @@ public class CustomerFxBean extends Customer {
     }
 
     public Customer getWrappedCustomer() {
+        customer.setCustomerId(customerId.get());
         customer.setName(name.get());
         customer.setAddressline1(addressline1.get());
         
         return customer;
+    }
+    
+    public IntegerProperty customerIdProperty() {
+        return customerId;
+    }
+    
+    @Override
+    public Integer getCustomerId() {
+//        if (!customer.getCustomerId().equals(customerId.get())) {
+//            setCustomerId(customer.getCustomerId());
+//        }
+        return customerId.get();
+    }
+
+    @Override
+    public void setCustomerId(Integer customerId) {
+        this.customerId.set(customerId);
+        customer.setCustomerId(customerId);
     }
     
     public StringProperty nameProperty() {
@@ -122,24 +140,6 @@ public class CustomerFxBean extends Customer {
 
     public void setDate(Date random) {
         this.date.set(random);
-    }
-    
-    public IntegerProperty customerIdProperty() {
-        return customerId;
-    }
-    
-    @Override
-    public Integer getCustomerId() {
-        if (!customer.getCustomerId().equals(customerId.get())) {
-            setCustomerId(customer.getCustomerId());
-        }
-        return customerId.get();
-    }
-
-    @Override
-    public void setCustomerId(Integer customerId) {
-        this.customerId.set(customerId);
-        customer.setCustomerId(customerId);
     }
 
     public StringProperty addressline1Property() {

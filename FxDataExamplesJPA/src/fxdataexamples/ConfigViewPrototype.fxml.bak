@@ -28,8 +28,8 @@
         <TextField id="textField1" fx:id="textfield" onAction="#textfieldenter" prefWidth="200.0" promptText="prompt" />
         <Button id="button4" onAction="#saveButtonClicked" text="Save" />
         <Button id="button3" onAction="#insertButtonClicked" text="Insert" />
-        <Button id="button1" onAction="#buttonclick" text="Delete" />
-        <Button id="button2" fx:id="bindButton" onAction="#bindPressed" text="Reset" />
+        <Button id="button1" onAction="#deleteButtonClicked" text="Delete" />
+        <Button id="button2" fx:id="bindButton" text="Reset" />
       </children>
     </HBox>
   </children>

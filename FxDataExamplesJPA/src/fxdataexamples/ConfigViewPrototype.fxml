@@ -25,11 +25,11 @@
     </HBox>
     <HBox id="HBox" alignment="CENTER" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
       <children>
-        <TextField id="textField1" fx:id="textfield" onAction="#textfieldenter" prefWidth="200.0" promptText="prompt" />
+        <TextField id="textField1" fx:id="textfield" prefWidth="200.0" promptText="prompt" />
         <Button id="button4" onAction="#saveButtonClicked" text="Save" />
         <Button id="button3" onAction="#insertButtonClicked" text="Insert" />
         <Button id="button1" onAction="#deleteButtonClicked" text="Delete" />
-        <Button id="button2" fx:id="bindButton" onAction="#bindPressed" text="Reset" />
+        <Button id="button2" fx:id="bindButton" text="Reset" />
       </children>
     </HBox>
   </children>

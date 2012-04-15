@@ -60,59 +60,7 @@ public class ConfigViewPrototype implements Initializable {
     
     @FXML
     private ScrollPane formPane;
-    
-    @FXML
-    private void handleTableDrag(MouseEvent event) {
-        System.out.println("You drag me!");
-    }
-    
-    @FXML
-    private void insertButtonClicked(ActionEvent event) {
-        Customer c = new Customer(777);
-        c.setName("Shinra");
-        c.setAddressline1("Midgar");
-        c.setEmail("shinra@shinra.com");
-        c.setCreditLimit(5000000);
-        customerDataSource.getData().add(new CustomerFxBean(c));
-    }
-    
-    @FXML
-    private void saveButtonClicked(ActionEvent event) {
-        try {
-            Customer c = customerTable.getSelectionModel().getSelectedItem().getWrappedCustomer();
-            System.out.println("Saving customer: " + c);
-            System.out.println(c.getAddressline1() + " " + customerTable.getSelectionModel().getSelectedItem().getAddressline1());
-            System.out.println(c.getName() + " " + customerTable.getSelectionModel().getSelectedItem().getName());
-            System.out.println(c.getCreditLimit() + " " + customerTable.getSelectionModel().getSelectedItem().getCreditLimit());
-            customerJpaController.edit(c);
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(ConfigViewPrototype.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(ConfigViewPrototype.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    @FXML
-    private void deleteButtonClicked(ActionEvent event) {
-//        CustomerFxBean bean = customerTable.getSelectionModel().getSelectedItem();
-//        bean.setName("hello");
-        
-//        Customer c = customerTable.getSelectionModel().getSelectedItem().getCustomer();
-//        System.out.println("Saving customer: " + c);
-//        System.out.println(c.getAddressline1() + " " + customerTable.getSelectionModel().getSelectedItem().getAddressline1());
-//        System.out.println(c.getName() + " " + customerTable.getSelectionModel().getSelectedItem().getName());
-//        System.out.println(c.getCreditLimit() + " " + customerTable.getSelectionModel().getSelectedItem().getCreditLimit());
-    }
-    
-    @FXML
-    private void bindPressed(ActionEvent event) {
-    }
-    
-    @FXML
-    private void textfieldenter(ActionEvent event) {
-        System.out.println("text field pressed enter");
-    }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         loadEntityManager();
@@ -153,14 +101,14 @@ public class ConfigViewPrototype implements Initializable {
 
                     @Override
                     public void changed(ObservableValue<? extends CustomerFxBean> arg0, CustomerFxBean arg1, CustomerFxBean arg2) {
-                        FXForm fxForm = new FXForm(arg2);
-                        fxForm.setTitle(" Edit Customer: " + arg2.getName());
-                        formPane.setContent(fxForm);
-
                         if (arg1 != null) {
                             textfield.textProperty().unbindBidirectional(arg1.nameProperty());
                         }
                         if (arg2 != null) {
+                            FXForm fxForm = new FXForm(arg2);
+                            fxForm.setTitle(" Edit Customer: " + arg2.getName());
+                            formPane.setContent(fxForm);
+
                             textfield.textProperty().bindBidirectional(arg2.nameProperty());
                         }
                         
@@ -203,4 +151,41 @@ public class ConfigViewPrototype implements Initializable {
         }
     };
 
+    @FXML
+    private void insertButtonClicked(ActionEvent event) {
+        Customer c = new Customer(778);
+        c.setName("Shinra");
+        c.setAddressline1("Midgar");
+        c.setEmail("shinra@shinra.com");
+        c.setCreditLimit(5000000);
+        customerDataSource.getData().add(new CustomerFxBean(c));
+    }
+    
+    @FXML
+    private void saveButtonClicked(ActionEvent event) {
+        try {
+            Customer c = customerTable.getSelectionModel().getSelectedItem().getWrappedCustomer();
+            System.out.println("Saving customer: " + c);
+            System.out.println(c.getAddressline1() + " " + customerTable.getSelectionModel().getSelectedItem().getAddressline1());
+            System.out.println(c.getName() + " " + customerTable.getSelectionModel().getSelectedItem().getName());
+            System.out.println(c.getCreditLimit() + " " + customerTable.getSelectionModel().getSelectedItem().getCreditLimit());
+            customerJpaController.edit(c);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ConfigViewPrototype.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ConfigViewPrototype.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @FXML
+    private void deleteButtonClicked(ActionEvent event) {
+//        CustomerFxBean bean = customerTable.getSelectionModel().getSelectedItem();
+//        bean.setName("hello");
+        
+//        Customer c = customerTable.getSelectionModel().getSelectedItem().getCustomer();
+//        System.out.println("Saving customer: " + c);
+//        System.out.println(c.getAddressline1() + " " + customerTable.getSelectionModel().getSelectedItem().getAddressline1());
+//        System.out.println(c.getName() + " " + customerTable.getSelectionModel().getSelectedItem().getName());
+//        System.out.println(c.getCreditLimit() + " " + customerTable.getSelectionModel().getSelectedItem().getCreditLimit());
+    }
 }
