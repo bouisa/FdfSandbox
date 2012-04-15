@@ -6,16 +6,14 @@ package fxdataexamples.persistence;
 
 import fxdataexamples.persistence.exceptions.NonexistentEntityException;
 import fxdataexamples.persistence.exceptions.PreexistingEntityException;
-import fxdataexamples.persistence.Customer;
 import java.io.Serializable;
-import javax.persistence.Query;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import fxdataexamples.persistence.DiscountCode;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  *

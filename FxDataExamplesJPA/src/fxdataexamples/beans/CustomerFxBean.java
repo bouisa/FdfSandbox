@@ -7,12 +7,14 @@ package fxdataexamples.beans;
 import fxdataexamples.persistence.Customer;
 import java.util.Date;
 import javafx.beans.property.*;
+import javax.persistence.Entity;
 import org.hibernate.validator.constraints.Email;
 
 /**
  *
  * @author abouis
  */
+
 public class CustomerFxBean extends Customer {
     
     private Customer customer;
@@ -45,6 +47,13 @@ public class CustomerFxBean extends Customer {
         
         date = new SimpleObjectProperty<>(new Date());
     }
+
+    public Customer getWrappedCustomer() {
+        customer.setName(name.get());
+        customer.setAddressline1(addressline1.get());
+        
+        return customer;
+    }
     
     public StringProperty nameProperty() {
         return name;
@@ -52,9 +61,9 @@ public class CustomerFxBean extends Customer {
 
     @Override
     public final String getName() {
-        if(!customer.getName().equals(name.get())) {
-            setName(customer.getName());
-        }
+//        if(!customer.getName().equals(name.get())) {
+//            setName(customer.getName());
+//        }
         
         return name.get();
         
@@ -139,9 +148,9 @@ public class CustomerFxBean extends Customer {
     
     @Override
     public String getAddressline1() {
-        if (!customer.getAddressline1().equals(addressline1.get())) {
-            setAddressline1(customer.getAddressline1());
-        }
+//        if (!customer.getAddressline1().equals(addressline1.get())) {
+//            setAddressline1(customer.getAddressline1());
+//        }
         return addressline1.get();
     }
 

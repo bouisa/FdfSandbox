@@ -16,21 +16,22 @@ import com.dooapp.fxform.view.handler.FieldHandler;
 import fxdataexamples.beans.CustomerFxBean;
 import fxdataexamples.persistence.Customer;
 import fxdataexamples.persistence.CustomerJpaController;
+import fxdataexamples.persistence.exceptions.NonexistentEntityException;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -39,6 +40,7 @@ import javafx.util.Callback;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import jfxtras.labs.scene.control.CalendarTextField;
+import org.javafxdata.datasources.protocol.ObjectDataSource;
 
 /**
  *
@@ -47,7 +49,8 @@ import jfxtras.labs.scene.control.CalendarTextField;
 public class ConfigViewPrototype implements Initializable {
     
     private EntityManagerFactory emf;
-    private List<CustomerFxBean> customerData;
+    private CustomerJpaController customerJpaController;
+    private ObjectDataSource<CustomerFxBean> customerDataSource;
 
     @FXML
     private TableView<CustomerFxBean> customerTable;
@@ -64,7 +67,41 @@ public class ConfigViewPrototype implements Initializable {
     }
     
     @FXML
-    private void buttonclick(ActionEvent event) {
+    private void insertButtonClicked(ActionEvent event) {
+        Customer c = new Customer(777);
+        c.setName("Shinra");
+        c.setAddressline1("Midgar");
+        c.setEmail("shinra@shinra.com");
+        c.setCreditLimit(5000000);
+        customerDataSource.getData().add(new CustomerFxBean(c));
+    }
+    
+    @FXML
+    private void saveButtonClicked(ActionEvent event) {
+        try {
+            Customer c = customerTable.getSelectionModel().getSelectedItem().getWrappedCustomer();
+            System.out.println("Saving customer: " + c);
+            System.out.println(c.getAddressline1() + " " + customerTable.getSelectionModel().getSelectedItem().getAddressline1());
+            System.out.println(c.getName() + " " + customerTable.getSelectionModel().getSelectedItem().getName());
+            System.out.println(c.getCreditLimit() + " " + customerTable.getSelectionModel().getSelectedItem().getCreditLimit());
+            customerJpaController.edit(c);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ConfigViewPrototype.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ConfigViewPrototype.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @FXML
+    private void deleteButtonClicked(ActionEvent event) {
+//        CustomerFxBean bean = customerTable.getSelectionModel().getSelectedItem();
+//        bean.setName("hello");
+        
+//        Customer c = customerTable.getSelectionModel().getSelectedItem().getCustomer();
+//        System.out.println("Saving customer: " + c);
+//        System.out.println(c.getAddressline1() + " " + customerTable.getSelectionModel().getSelectedItem().getAddressline1());
+//        System.out.println(c.getName() + " " + customerTable.getSelectionModel().getSelectedItem().getName());
+//        System.out.println(c.getCreditLimit() + " " + customerTable.getSelectionModel().getSelectedItem().getCreditLimit());
     }
     
     @FXML
@@ -84,7 +121,7 @@ public class ConfigViewPrototype implements Initializable {
     
     private void loadEntityManager() {
         emf = Persistence.createEntityManagerFactory("FxDataExamplesPU");
-        
+        customerJpaController = new CustomerJpaController(emf);
     }
 
     private void loadCustomerTable() {
@@ -92,38 +129,32 @@ public class ConfigViewPrototype implements Initializable {
         // The created node uses JFXtra's date picker
         DelegateFactory.addGlobalFactory(new DateHandler(), DATE_FACTORY);
         
-        CustomerJpaController controller = new CustomerJpaController(emf);
-        List<Customer> resultList = controller.findCustomerEntities();
-//        Query query = em.createQuery("SELECT c FROM Customer c");
-//        List<Customer> resultList = query.getResultList();
+        List<Customer> resultList = customerJpaController.findCustomerEntities();
         
         List<CustomerFxBean> adaptedData = new ArrayList<>();
         for (int i = 0; i < resultList.size(); i++) {
             CustomerFxBean c = new CustomerFxBean(resultList.get(i));
             adaptedData.add(c);
-            
+       
             System.out.println(c.getName());
         }
         
-        customerData = adaptedData;
-        customerTable.setItems(FXCollections.observableArrayList(customerData));
+        customerDataSource = new ObjectDataSource<>(adaptedData, CustomerFxBean.class, "name", "creditLimit");
+        customerDataSource.getNamedColumn("name").setText("Name");
+        customerDataSource.getNamedColumn("name").setCellValueFactory(new PropertyValueFactory("name"));
+        customerDataSource.getNamedColumn("creditLimit").setText("Credit Limit");
+        customerDataSource.getNamedColumn("creditLimit").setCellValueFactory(new PropertyValueFactory("creditLimit"));
         
+        customerTable.setItems(customerDataSource.getData());
+        customerTable.getColumns().addAll(customerDataSource.getColumns());
         
-        TableColumn<CustomerFxBean, String> nameCol = new TableColumn<>("Name");
-        nameCol.setCellValueFactory(new PropertyValueFactory("name"));
-        
-        TableColumn<CustomerFxBean, Integer> creditLimitCol = new TableColumn<>("Credit Limit");
-        creditLimitCol.setCellValueFactory(new PropertyValueFactory("creditLimit"));
-        
-        customerTable.getColumns().addAll(nameCol, creditLimitCol);
-        
-
         customerTable.getSelectionModel().selectedItemProperty().addListener(
                 new ChangeListener<CustomerFxBean>() {
 
                     @Override
                     public void changed(ObservableValue<? extends CustomerFxBean> arg0, CustomerFxBean arg1, CustomerFxBean arg2) {
                         FXForm fxForm = new FXForm(arg2);
+                        fxForm.setTitle(" Edit Customer: " + arg2.getName());
                         formPane.setContent(fxForm);
 
                         if (arg1 != null) {
