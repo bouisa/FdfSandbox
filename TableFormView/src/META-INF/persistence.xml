@@ -11,4 +11,15 @@
       <property name="javax.persistence.jdbc.user" value="app"/>
     </properties>
   </persistence-unit>
+  <persistence-unit name="OracleDevPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>tableformexample.mdpconfig.data.MdpConfig</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@gs-595f-voraclefe.ndc.nasa.gov:5500:oralxdev"/>
+      <property name="javax.persistence.jdbc.password" value="fdcfg1"/>
+      <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+      <property name="javax.persistence.jdbc.user" value="fdcfg"/>
+      <property name="eclipselink.ddl-generation" value="create-tables"/>
+    </properties>
+  </persistence-unit>
 </persistence>

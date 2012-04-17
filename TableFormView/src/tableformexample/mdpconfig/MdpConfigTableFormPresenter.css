@@ -1,0 +1,21 @@
+/* 
+CSS file containing some FXForm2 properties
+*/
+
+/*.form-label {
+    -fx-font-size: 20;
+}
+
+.form-editor {
+    -fx-font-size: 20;
+}
+
+.form-title {
+    -fx-font-size: 20;
+    -fx-text-fill: dimgray;
+}*/
+
+.form-tooltip {
+    -fx-font-size: 11;
+    -fx-text-fill: gray;
+}
