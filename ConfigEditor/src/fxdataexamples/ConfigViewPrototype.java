@@ -22,9 +22,9 @@ import org.javafxdata.datasources.protocol.ObjectDataSource;
  *
  * @author Zero
  */
-public class ConfigViewPrototype implements Initializable {
+public class ConfigViewPrototype implements Initializable, TableFormView {
     
-    private TableFormPresenter controller;
+    private TableFormPresenter presenter;
 
     @FXML
     private TableView<CustomerFxBean> customerTable;
@@ -45,23 +45,24 @@ public class ConfigViewPrototype implements Initializable {
 
         @Override
         public void changed(ObservableValue arg0, Object arg1, Object arg2) {
-            controller.changeActiveBean(formPane.getContent(), arg1, arg2);
+            presenter.changeActiveBean(formPane.getContent(), arg1, arg2);
         }
     };
 
-    public TableFormPresenter getController() {
-        return controller;
+    public TableFormPresenter getPresenter() {
+        return presenter;
     }
 
-    public void setController(TableFormPresenter controller) {
-        this.controller = controller;
-        initController();
+    @Override
+    public void setPresenter(TableFormPresenter presenter) {
+        this.presenter = presenter;
+        initPresenter();
     }
     
-    private void initController() {
+    private void initPresenter() {
         dispose();
         initBindings();
-        controller.refresh();
+        presenter.refresh();
     }
 
     @Override
@@ -71,7 +72,7 @@ public class ConfigViewPrototype implements Initializable {
     private void initBindings() {
         addButton.disableProperty().bind(customerTable.getSelectionModel().selectedItemProperty().isNull());
         removeButton.disableProperty().bind(customerTable.getSelectionModel().selectedItemProperty().isNull());
-        saveButton.disableProperty().bind(controller.formChangedProperty().not());
+        saveButton.disableProperty().bind(presenter.formChangedProperty().not());
         
         customerTable.getSelectionModel().selectedItemProperty().addListener(selectionListener);
     }
@@ -84,23 +85,25 @@ public class ConfigViewPrototype implements Initializable {
         customerTable.getSelectionModel().selectedItemProperty().removeListener(selectionListener);
     }
     
+    @Override
     public void loadData(ObjectDataSource dataSource) {
         customerTable.setItems(dataSource.getData());
         customerTable.getColumns().addAll(dataSource.getColumns());
     }
     
+    @Override
     public void loadBeanForm(Node form) {
         formPane.setContent(form);
     }
 
     @FXML
     private void addActionFired(ActionEvent event) {
-        controller.addRow();
+        presenter.addRow();
     }
     
     @FXML
     private void saveActionFired(ActionEvent event) {
-        controller.save(customerTable.getSelectionModel().getSelectedItem());
+        presenter.save(customerTable.getSelectionModel().getSelectedItem());
     }
     
     @FXML

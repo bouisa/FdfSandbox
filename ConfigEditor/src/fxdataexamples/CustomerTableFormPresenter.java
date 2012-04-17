@@ -16,14 +16,8 @@ import com.dooapp.fxform.view.factory.NodeFactory;
 import com.dooapp.fxform.view.handler.FieldHandler;
 import fxdataexamples.beans.CustomerFxBean;
 import fxdataexamples.persistence.Customer;
-import fxdataexamples.persistence.CustomerJpaController;
-import fxdataexamples.persistence.exceptions.NonexistentEntityException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -31,8 +25,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import jfxtras.labs.scene.control.CalendarTextField;
 import org.javafxdata.datasources.protocol.ObjectDataSource;
 
@@ -42,10 +34,11 @@ import org.javafxdata.datasources.protocol.ObjectDataSource;
  */
 public class CustomerTableFormPresenter implements TableFormPresenter {
     
-    private ConfigViewPrototype view;
-    private EntityManagerFactory emf;
-    private CustomerJpaController customerJpaController;
-    private ObjectDataSource<CustomerFxBean> customerDataSource;
+    private TableFormView view;
+    private BeanTransactionCache<CustomerFxBean> model;
+//    private EntityManagerFactory emf;
+//    private CustomerJpaController customerJpaController;
+//    private ObjectDataSource<CustomerFxBean> customerDataSource;
     public BooleanProperty formChanged = new SimpleBooleanProperty(false);
     
     private final static NodeFactory DATE_FACTORY = new NodeFactory() {
@@ -61,6 +54,7 @@ public class CustomerTableFormPresenter implements TableFormPresenter {
 
                         @Override
                         public Void call(Node node) {
+                            // TODO unhook from underlying bean
                             System.out.println("disposable callback called");
                             return null;
                         }
@@ -73,10 +67,12 @@ public class CustomerTableFormPresenter implements TableFormPresenter {
      * 
      * @param view 
      */
-    public CustomerTableFormPresenter(ConfigViewPrototype view) {
+    public CustomerTableFormPresenter(TableFormView view, BeanTransactionCache<CustomerFxBean> model) {
         this.view = view;
-        this.emf = Persistence.createEntityManagerFactory("FxDataExamplesPU");
-        this.customerJpaController = new CustomerJpaController(emf);
+        this.model = model;
+        
+//        this.emf = Persistence.createEntityManagerFactory("FxDataExamplesPU");
+//        this.customerJpaController = new CustomerJpaController(emf);
         
         // Initialize FXForm with custom factory to handle ObjectProperty<Date>
         // The created node uses JFXtra's date picker
@@ -100,26 +96,20 @@ public class CustomerTableFormPresenter implements TableFormPresenter {
 
     @Override
     public void refresh() {
-        List<Customer> resultList = customerJpaController.findCustomerEntities();
-
-        List<CustomerFxBean> adaptedData = new ArrayList<>();
-        for (int i = 0; i < resultList.size(); i++) {
-            CustomerFxBean c = new CustomerFxBean(resultList.get(i));
-            adaptedData.add(c);
-
-            System.out.println(c.getName());
-        }
-
-        customerDataSource = new ObjectDataSource<>(adaptedData, CustomerFxBean.class, "name", "creditLimit");
+        model.refreshCache("name", "creditLimit");
+        ObjectDataSource<CustomerFxBean> dataSource = model.getCachedData();
         
-        customerDataSource.getData();
+//        List<CustomerFxBean> adaptedData = model.getCachedData();
+
+//        customerDataSource = new ObjectDataSource<>(adaptedData, CustomerFxBean.class, "name", "creditLimit");
+
+//        dataSource.columns("name", "creditLimit");
+        dataSource.getNamedColumn("name").setText("Name");
+        dataSource.getNamedColumn("name").setCellValueFactory(new PropertyValueFactory("name"));
+        dataSource.getNamedColumn("creditLimit").setText("Credit Limit");
+        dataSource.getNamedColumn("creditLimit").setCellValueFactory(new PropertyValueFactory("creditLimit"));
         
-        customerDataSource.getNamedColumn("name").setText("Name");
-        customerDataSource.getNamedColumn("name").setCellValueFactory(new PropertyValueFactory("name"));
-        customerDataSource.getNamedColumn("creditLimit").setText("Credit Limit");
-        customerDataSource.getNamedColumn("creditLimit").setCellValueFactory(new PropertyValueFactory("creditLimit"));
-        
-        view.loadData(customerDataSource);
+        view.loadData(dataSource);
     }
     
     @Override
@@ -163,25 +153,15 @@ public class CustomerTableFormPresenter implements TableFormPresenter {
         c.setAddressline1("Midgar");
         c.setEmail("shinra@shinra.com");
         c.setCreditLimit(5000000);
-        customerDataSource.getData().add(new CustomerFxBean(c));
+        model.add(new CustomerFxBean(c));
+//        customerDataSource.getData().add(new CustomerFxBean(c));
     }
     
     @Override
     public void save(Object bean) {
-        try {
-            Customer c = ((CustomerFxBean)bean).getWrappedCustomer();
-            System.out.println("Saving customer: " + c);
-//            System.out.println(c.getAddressline1() + " " + bean.getAddressline1());
-//            System.out.println(c.getName() + " " + bean.getSelectionModel().getSelectedItem().getName());
-//            System.out.println(c.getCreditLimit() + " " + bean.getSelectionModel().getSelectedItem().getCreditLimit());
-            customerJpaController.edit(c);
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(ConfigViewPrototype.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(ConfigViewPrototype.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        model.commit((CustomerFxBean) bean);
     }
-    
+        
     /**
      * FXForm's DelegateFactory allows registering a FieldHandler->NodeFactory
      * mapping to generate custom form editors.
