@@ -24,7 +24,7 @@ import org.javafxdata.datasources.protocol.ObjectDataSource;
  */
 public class ConfigViewPrototype implements Initializable {
     
-    private ConfigEditorController controller;
+    private TableFormPresenter controller;
 
     @FXML
     private TableView<CustomerFxBean> customerTable;
@@ -40,27 +40,48 @@ public class ConfigViewPrototype implements Initializable {
     
     @FXML
     private Button saveButton;
+    
+    private final ChangeListener selectionListener = new ChangeListener() {
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        controller = new ConfigEditorController(this);
-        initSelectionListener();
+        @Override
+        public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+            controller.changeActiveBean(formPane.getContent(), arg1, arg2);
+        }
+    };
+
+    public TableFormPresenter getController() {
+        return controller;
+    }
+
+    public void setController(TableFormPresenter controller) {
+        this.controller = controller;
+        initController();
+    }
+    
+    private void initController() {
+        dispose();
+        initBindings();
         controller.refresh();
     }
 
-    private void initSelectionListener() {
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+    }
+
+    private void initBindings() {
         addButton.disableProperty().bind(customerTable.getSelectionModel().selectedItemProperty().isNull());
         removeButton.disableProperty().bind(customerTable.getSelectionModel().selectedItemProperty().isNull());
-        saveButton.disableProperty().bind(controller.formChangedProperty.not());
+        saveButton.disableProperty().bind(controller.formChangedProperty().not());
         
-        customerTable.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener() {
-
-                    @Override
-                    public void changed(ObservableValue arg0, Object arg1, Object arg2) {
-                        controller.changeActiveBean(formPane.getContent(), arg1, arg2);
-                    }
-                });
+        customerTable.getSelectionModel().selectedItemProperty().addListener(selectionListener);
+    }
+    
+    private void dispose() {
+        addButton.disableProperty().unbind();
+        removeButton.disableProperty().unbind();
+        saveButton.disableProperty().unbind();
+        
+        customerTable.getSelectionModel().selectedItemProperty().removeListener(selectionListener);
     }
     
     public void loadData(ObjectDataSource dataSource) {

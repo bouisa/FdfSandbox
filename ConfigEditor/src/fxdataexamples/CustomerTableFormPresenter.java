@@ -40,24 +40,19 @@ import org.javafxdata.datasources.protocol.ObjectDataSource;
  *
  * @author Zero
  */
-public class ConfigEditorController {
+public class CustomerTableFormPresenter implements TableFormPresenter {
     
     private ConfigViewPrototype view;
     private EntityManagerFactory emf;
     private CustomerJpaController customerJpaController;
     private ObjectDataSource<CustomerFxBean> customerDataSource;
+    public BooleanProperty formChanged = new SimpleBooleanProperty(false);
     
     private final static NodeFactory DATE_FACTORY = new NodeFactory() {
 
         @Override
         public DisposableNode createNode(ElementController elementController) throws NodeCreationException {
-//            return new DisposableNodeWrapper(new Label(elementController.getElement().getField().getType() + " wow this worked"),
-//                    new Callback<Node, Void>() {
-//                        public Void call(Node node) {
-//                            return null;
-//                        }
-//                    });
-
+            // TODO hook this up to underlying bean
             elementController.getValue();
             CalendarTextField cal = new CalendarTextField();
 
@@ -73,7 +68,12 @@ public class ConfigEditorController {
         }
     };
     
-    public ConfigEditorController(ConfigViewPrototype view) {
+    /**
+     * Constructor
+     * 
+     * @param view 
+     */
+    public CustomerTableFormPresenter(ConfigViewPrototype view) {
         this.view = view;
         this.emf = Persistence.createEntityManagerFactory("FxDataExamplesPU");
         this.customerJpaController = new CustomerJpaController(emf);
@@ -85,29 +85,20 @@ public class ConfigEditorController {
 //        ConfigEditorController.class.getResource("/fxdataexamples/ConfigEditorController.css").toExternalForm());
     }
 
-    /**
-     * FXForm's DelegateFactory allows registering a FieldHandler->NodeFactory
-     * mapping to generate custom form editors.
-     */
-    private static class DateHandler implements FieldHandler {
-
-        @Override
-        public boolean handle(Field field) {
-            if(!field.getType().isAssignableFrom(ObjectProperty.class)) {
-                return false;
-            }
-            
-            try {
-                return Util.getObjectPropertyGeneric(field).isAssignableFrom(Date.class);
-            } catch (Exception e) {
-                // Null pointer exception will be thrown if this handler attempts
-                // to evaluate a non ObjectProperty field
-            }
-            
-            return false;
-        }
+    @Override
+    public BooleanProperty formChangedProperty() {
+        return formChanged;
+    }
+    
+    public Boolean getFormChanged() {
+        return formChanged.get();
+    }
+    
+    public void setFormChanged(Boolean changed) {
+        formChanged.set(changed);
     }
 
+    @Override
     public void refresh() {
         List<Customer> resultList = customerJpaController.findCustomerEntities();
 
@@ -131,6 +122,7 @@ public class ConfigEditorController {
         view.loadData(customerDataSource);
     }
     
+    @Override
     public void changeActiveBean(Node oldForm, Object oldBean, Object newBean) {
         if(oldForm != null) {
             FXForm of = (FXForm) oldForm;
@@ -145,8 +137,8 @@ public class ConfigEditorController {
             fxForm.setSource(nb);
             fxForm.setTitle(" Edit Customer: " + nb.getName());
             
-            formChangedProperty.unbind();
-            formChangedProperty.bind(getBeanChangeBinding(nb));
+            formChanged.unbind();
+            formChanged.bind(getBeanChangeBinding(nb));
             
             view.loadBeanForm(fxForm);
         }
@@ -163,9 +155,8 @@ public class ConfigEditorController {
         
         return changed;
     }
-    
-    public BooleanProperty formChangedProperty = new SimpleBooleanProperty(false);
-    
+
+    @Override
     public void addRow() {
         Customer c = new Customer(778);
         c.setName("Shinra");
@@ -175,6 +166,7 @@ public class ConfigEditorController {
         customerDataSource.getData().add(new CustomerFxBean(c));
     }
     
+    @Override
     public void save(Object bean) {
         try {
             Customer c = ((CustomerFxBean)bean).getWrappedCustomer();
@@ -187,6 +179,29 @@ public class ConfigEditorController {
             Logger.getLogger(ConfigViewPrototype.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(ConfigViewPrototype.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    /**
+     * FXForm's DelegateFactory allows registering a FieldHandler->NodeFactory
+     * mapping to generate custom form editors.
+     */
+    private static class DateHandler implements FieldHandler {
+
+        @Override
+        public boolean handle(Field field) {
+            if(!field.getType().isAssignableFrom(ObjectProperty.class)) {
+                return false;
+            }
+            
+            try {
+                return Util.getObjectPropertyGeneric(field).isAssignableFrom(Date.class);
+            } catch (Exception e) {
+                // Null pointer exception will be thrown if this handler attempts
+                // to evaluate a non ObjectProperty field
+            }
+            
+            return false;
         }
     }
     
