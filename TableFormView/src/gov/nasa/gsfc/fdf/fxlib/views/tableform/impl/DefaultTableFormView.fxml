@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="gov.nasa.gsfc.fdf.fxlib.views.tableform.impl.DefaultTableFormView">
+  <children>
+    <HBox id="HBox" alignment="CENTER" prefHeight="367.0" prefWidth="600.0" spacing="5.0" AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+        <TableView id="tableView2" fx:id="customerTable" prefHeight="200.0" prefWidth="300.0" HBox.hgrow="NEVER">
+          <contextMenu>
+            <ContextMenu id="contextMenu1">
+              <items>
+                <MenuItem id="menuItem1" text="Unspecified Action" />
+                <MenuItem id="menuItem2" text="Unspecified Action" />
+              </items>
+            </ContextMenu>
+          </contextMenu>
+        </TableView>
+        <ScrollPane id="scrollPane1" fx:id="formPane" prefHeight="200.0" prefWidth="300.0" HBox.hgrow="ALWAYS" />
+      </children>
+    </HBox>
+    <HBox id="HBox" alignment="CENTER" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <children>
+        <Button id="button4" fx:id="saveButton" onAction="#saveActionFired" text="Save" />
+        <Button id="button2" fx:id="resetButton" onAction="#resetActionFired" text="Reset" />
+      </children>
+    </HBox>
+    <TilePane id="tilePane1" hgap="5.0" prefHeight="21.0" prefWidth="298.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+      <children>
+        <Button id="button3" fx:id="addButton" maxWidth="100.0" onAction="#addActionFired" text="Add" />
+        <Button id="button1" fx:id="removeButton" maxWidth="100.0" onAction="#deleteActionFired" text="Remove" />
+        <Button id="button5" fx:id="refreshButton" maxWidth="100.0" text="Refresh" />
+      </children>
+    </TilePane>
+  </children>
+</AnchorPane>
