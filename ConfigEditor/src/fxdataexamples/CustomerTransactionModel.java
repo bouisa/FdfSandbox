@@ -50,7 +50,7 @@ public class CustomerTransactionModel implements BeanTransactionCache<CustomerFx
 
     @Override
     public void remove(CustomerFxBean bean) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        cache.getData().remove(bean);
     }
 
     @Override

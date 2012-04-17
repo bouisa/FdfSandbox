@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="fxdataexamples.ConfigViewPrototype">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="fxdataexamples.DefaultTableFormView">
   <children>
     <HBox id="HBox" alignment="CENTER" prefHeight="367.0" prefWidth="600.0" spacing="5.0" AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
@@ -25,7 +25,7 @@
     </HBox>
     <HBox id="HBox" alignment="CENTER" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
       <children>
-        <Button id="button4" onAction="#saveActionFired" text="Save" />
+        <Button id="button4" fx:id="saveButton" onAction="#saveActionFired" text="Save" />
         <Button id="button2" fx:id="bindButton" onAction="#resetActionFired" text="Reset" />
       </children>
     </HBox>

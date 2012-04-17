@@ -36,9 +36,6 @@ public class CustomerTableFormPresenter implements TableFormPresenter {
     
     private TableFormView view;
     private BeanTransactionCache<CustomerFxBean> model;
-//    private EntityManagerFactory emf;
-//    private CustomerJpaController customerJpaController;
-//    private ObjectDataSource<CustomerFxBean> customerDataSource;
     public BooleanProperty formChanged = new SimpleBooleanProperty(false);
     
     private final static NodeFactory DATE_FACTORY = new NodeFactory() {
@@ -71,9 +68,6 @@ public class CustomerTableFormPresenter implements TableFormPresenter {
         this.view = view;
         this.model = model;
         
-//        this.emf = Persistence.createEntityManagerFactory("FxDataExamplesPU");
-//        this.customerJpaController = new CustomerJpaController(emf);
-        
         // Initialize FXForm with custom factory to handle ObjectProperty<Date>
         // The created node uses JFXtra's date picker
         DelegateFactory.addGlobalFactory(new DateHandler(), DATE_FACTORY);
@@ -99,11 +93,6 @@ public class CustomerTableFormPresenter implements TableFormPresenter {
         model.refreshCache("name", "creditLimit");
         ObjectDataSource<CustomerFxBean> dataSource = model.getCachedData();
         
-//        List<CustomerFxBean> adaptedData = model.getCachedData();
-
-//        customerDataSource = new ObjectDataSource<>(adaptedData, CustomerFxBean.class, "name", "creditLimit");
-
-//        dataSource.columns("name", "creditLimit");
         dataSource.getNamedColumn("name").setText("Name");
         dataSource.getNamedColumn("name").setCellValueFactory(new PropertyValueFactory("name"));
         dataSource.getNamedColumn("creditLimit").setText("Credit Limit");
@@ -154,7 +143,6 @@ public class CustomerTableFormPresenter implements TableFormPresenter {
         c.setEmail("shinra@shinra.com");
         c.setCreditLimit(5000000);
         model.add(new CustomerFxBean(c));
-//        customerDataSource.getData().add(new CustomerFxBean(c));
     }
     
     @Override

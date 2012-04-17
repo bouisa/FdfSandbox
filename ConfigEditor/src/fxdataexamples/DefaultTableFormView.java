@@ -22,7 +22,7 @@ import org.javafxdata.datasources.protocol.ObjectDataSource;
  *
  * @author Zero
  */
-public class ConfigViewPrototype implements Initializable, TableFormView {
+public class DefaultTableFormView implements Initializable, TableFormView {
     
     private TableFormPresenter presenter;
 

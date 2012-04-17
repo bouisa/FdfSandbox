@@ -39,8 +39,8 @@ public class TableFormExample extends Application {
         BeanTransactionCache<CustomerFxBean> model = new CustomerTransactionModel(beanDao);
         
         FXMLLoader loader = new FXMLLoader();
-        Parent root = (Parent) loader.load(getClass().getResource("ConfigViewPrototype.fxml").openStream());
-        ConfigViewPrototype view = (ConfigViewPrototype) loader.getController();
+        Parent root = (Parent) loader.load(getClass().getResource("DefaultTableFormView.fxml").openStream());
+        DefaultTableFormView view = (DefaultTableFormView) loader.getController();
         
         CustomerTableFormPresenter presenter = new CustomerTableFormPresenter(view, model);
         view.setPresenter(presenter);
