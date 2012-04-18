@@ -74,14 +74,22 @@ public class DemoWindowSystem extends Application {
                         .scaleY(2)
                     .build());
         }
+        
+        public void refresh() {
+            System.out.println("View opening... preform activation actions");
+        }
+        
+        public void close() {
+            System.out.println("View closing... preform deactivation actions");
+        }
     }
     
     private Feature createDemoFeature() {
-        WindowFeature feature = new WindowFeature() {
-
+        WindowFeature feature = new WindowFeature<SimpleMainView>() {
+            
             @Override
-            public Node createView() {
-                return new SimpleMainView();      
+            public SimpleMainView createView() {
+                return new SimpleMainView();
             }
 
             @Override
@@ -108,7 +116,17 @@ public class DemoWindowSystem extends Application {
             public boolean isSingleton() {
                 return false;
             }
-            
+
+            @Override
+            public void activateView(SimpleMainView view) {
+                view.refresh();
+            }
+
+            @Override
+            public void deactivateView(SimpleMainView view) {
+                view.close();
+            }
+
         };
         
         return feature;
