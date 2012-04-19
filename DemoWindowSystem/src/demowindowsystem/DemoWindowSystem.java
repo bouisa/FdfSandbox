@@ -56,7 +56,7 @@ public class DemoWindowSystem extends Application {
         Feature f2 = createOtherDemoFeature();
         workspaceSvc.addFeature(f2);
 
-        Scene scene = new Scene(workspaceDisplay.getSceneRoot(), 1500, 900);
+        Scene scene = new Scene(workspaceDisplay.getSceneRoot(), 800, 600);
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Demo Window System");
