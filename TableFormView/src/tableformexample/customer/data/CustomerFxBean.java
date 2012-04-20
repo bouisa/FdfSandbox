@@ -4,17 +4,17 @@
  */
 package tableformexample.customer.data;
 
-import tableformexample.customer.data.Customer;
 import java.util.Date;
 import javafx.beans.property.*;
 import org.hibernate.validator.constraints.Email;
+import tableformexample.FxEntityWrapper;
 
 /**
  *
  * @author abouis
  */
 
-public class CustomerFxBean extends Customer {
+public class CustomerFxBean extends Customer implements FxEntityWrapper<Customer> {
     
     private Customer customer;
     
@@ -47,7 +47,8 @@ public class CustomerFxBean extends Customer {
         date = new SimpleObjectProperty<>(new Date());
     }
 
-    public Customer getWrappedCustomer() {
+    @Override
+    public Customer getWrappedEntity() {
         customer.setCustomerId(customerId.get());
         customer.setName(name.get());
         customer.setAddressline1(addressline1.get());
