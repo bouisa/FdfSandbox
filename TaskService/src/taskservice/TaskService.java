@@ -6,11 +6,11 @@ package taskservice;
 
 import javafx.application.Application;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 /**
@@ -18,6 +18,9 @@ import javafx.stage.Stage;
  * @author Zero
  */
 public class TaskService extends Application {
+    
+    private BorderPane workspace;
+    private HBox statusBar;
 
     /**
      * @param args the command line arguments
@@ -28,12 +31,14 @@ public class TaskService extends Application {
     
     @Override
     public void start(Stage primaryStage) {
+        primaryStage.setTitle("Progress Service");
+        primaryStage.setScene(initScene());
+        primaryStage.show();
+        
         Model model = new Model();
         View view = new View(model);
         
-        primaryStage.setTitle("Progress Service");
-        primaryStage.setScene(new Scene(view.getParentNode(), 300, 250));
-        primaryStage.show();
+        addStatusComponent(view.getParentNode());
         
         Task<String> task = new Task<String>() {
 
@@ -61,21 +66,29 @@ public class TaskService extends Application {
 
         model.addTask(task);
         new Thread(task).start();
+    }
+    
+    public void addStatusComponent(Node node) {
+        statusBar.getChildren().add(node);
+    }
+    
+    private Scene initScene() {
+        workspace = 
+                BorderPaneBuilder.create()
+                    .center(
+                        StackPaneBuilder.create()
+                            .children(new Button())
+                        .build()
+                    )
+                    .bottom(
+                        statusBar = HBoxBuilder.create()
+                        .build()
+                    )
+                .build();
         
-//        primaryStage.setTitle("Hello World!");
-//        Button btn = new Button();
-//        btn.setText("Say 'Hello World'");
-//        btn.setOnAction(new EventHandler<ActionEvent>() {
-//
-//            @Override
-//            public void handle(ActionEvent event) {
-//                System.out.println("Hello World!");
-//            }
-//        });
-//        
-//        StackPane root = new StackPane();
-//        root.getChildren().add(btn);
-//        primaryStage.setScene(new Scene(root, 300, 250));
-//        primaryStage.show();
+        Scene scene = new Scene(workspace, 300, 250);
+        scene.getStylesheets().add("/taskservice/testcss2.css");
+        
+        return scene;
     }
 }
